@@ -1,73 +1,141 @@
-## Frontend Technical Assessment - Document Signer & Annotation Tool
+Thought for 4 seconds### PDF Annotator
 
-## Overview
+A web-based PDF annotation tool that allows users to highlight, underline, add comments, and signatures to PDF documents. This tool renders PDFs directly in the browser and enables exporting annotated PDFs without relying on external services.
 
-This technical assessment is designed to evaluate your skills in building interactive, modern web applications using Next.js. You'll be creating a single-page document signer and annotation tool that allows users to work with PDF documents.
+## Features
 
-## Requirements
+- PDF viewing with pagination controls
+- Annotation tools:
 
-### Core Functionality
+- Highlighting with adjustable height and width
+- Underlining with variable width
+- Comments with text editing
+- Signature drawing and placement
 
-1. **Document Upload**
-   - Users should be able to upload PDF documents
-   - Implement drag-and-drop functionality and/or file selection dialog
-   - Display uploaded document in the viewport
+- Sidebar for annotation management and organization by page
+- Real-time annotation preview
+- Export annotated PDFs with preserved annotations
+- Responsive design
 
-2. **Annotation Features**
-   - Implement the following annotation capabilities:
-     - Highlight text with customizable colors
-     - Underline text with customizable colors
-     - Add comments attached to specific parts of the document
-     - Draw signatures anywhere on the document
+## Setup and Installation
 
-3. **Document Export**
-   - Allow users to export the annotated document as a PDF
-   - All annotations and signatures must be properly embedded in the exported PDF
-   - Exported document should maintain the quality of the original
+### Prerequisites
 
-### Technical Requirements
+- Node.js (v16.x or higher)
+- npm or yarn
 
-- Use **Next.js** as your framework
-- Implement a single-page application (SPA) design where all actions occur without page reloads
-- Create a responsive design that works well on different screen sizes
-- Ensure the application has a clean, intuitive, and professional UI/UX
+### Installation
 
-### UI/UX Requirements
+1. Clone the repository:
 
-- Design a sleek, modern interface with clear visual hierarchy
-- Implement intuitive controls for all annotation tools
-- Create smooth transitions between different states of the application
-- Provide appropriate feedback for user actions (loading states, success/error messages)
+```shellscript
+git clone https://github.com/iroro1/frontend-test.git
+cd pdf-annotator
+```
 
-## Evaluation Criteria
+2. Install dependencies:
 
-Your submission will be evaluated based on:
+```shellscript
+npm install
+# or
+yarn
+```
 
-1. **Functionality** - Does the application meet all the requirements?
-2. **Code Quality** - Is your code well-structured, readable, and maintainable?
-3. **UI/UX Design** - Is the interface intuitive, responsive, and visually appealing?
-4. **Performance** - Does the application handle operations efficiently?
-5. **Best Practices** - Do you follow modern web development best practices?
+3. Run the development server:
 
-## Submission Guidelines
+```shellscript
+npm run dev
+# or
+yarn dev
+```
 
-1. Fork this repository
-2. Implement your solution
-3. Create a README with:
-   - Setup and running instructions
-   - Any libraries or tools you used and why
-   - Any challenges you faced and how you solved them
-   - Any features you would add if you had more time
-4. Submit a pull request or send us a link to your repository
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## Time Allocation
+## Usage
 
-You have three days to complete this assessment. We estimate it should take approximately 8-10 hours of focused work.
+1. Upload a PDF file using the upload interface.
+2. Select an annotation tool from the toolbar on the left (highlight, underline, comment, or signature).
+3. Choose a color for your annotation.
+4. Click or drag on the PDF to create an annotation:
 
-## Questions
+5. Click and drag to create highlights and underlines
+6. Click to add a comment or signature
 
-If you have any questions or need clarification, please reach out to [dev.ritease@gmail.com](mailto:dev.ritease@gmail.com).
+7. Navigate between pages using the pagination controls at the bottom.
+8. View all annotations in the sidebar on the right, organized by page.
+9. Preview your annotations by clicking the "Preview" button.
+10. Export the annotated PDF by clicking the "Save PDF" button.
 
-Good luck!
+## Libraries and Tools Used
 
+- **Next.js**: React framework for building the application, providing server-side rendering and routing
+- **React**: UI library for building the component-based interface
+- **pdf-lib**: Used for PDF manipulation and adding annotations to the PDF during export
+- **Tailwind CSS**: Used for styling the application with utility classes
+- **shadcn/ui**: Component library built on top of Tailwind CSS for UI elements like buttons, dialogs, etc.
+- **uuid**: Used for generating unique IDs for annotations
+- **react-dropzone**: Used for the file upload interface
 
+### Why these libraries?
+
+- **pdf-lib**: Chosen for its ability to manipulate PDFs directly in the browser without requiring server-side processing. It provides a clean API for adding various elements to PDFs including text, images, and shapes, which are essential for representing annotations.
+- **Tailwind CSS & shadcn/ui**: Used to rapidly build a polished UI with consistent styling while allowing for customization. The utility-first approach enabled quick iteration and responsive design.
+- **react-dropzone**: Provides a user-friendly file upload interface with drag-and-drop functionality and file validation.
+
+## Challenges and Solutions
+
+### PDF Rendering and Annotation Positioning
+
+**Challenge**: Ensuring annotations are positioned correctly on the PDF, especially when the PDF is scaled to fit the container.
+
+**Solution**:
+
+- Implemented a custom overlay that matches the dimensions of the PDF container
+- Stored both the annotation coordinates and the container dimensions to calculate scaling factors when exporting
+- Used the `page-fit` mode for PDFs and disabled scrolling to ensure consistent positioning
+
+### PDF Export with Annotations
+
+**Challenge**: Adding annotations to the PDF in their correct positions during export.
+
+**Solution**:
+
+- Used pdf-lib's coordinate system (which has its origin at the bottom-left corner) and transformed our annotation coordinates (which are based on the top-left corner)
+- Applied scaling factors based on the ratio between PDF page dimensions and our container dimensions
+- Converted colors from hex format to RGB values for proper rendering in the exported PDF
+
+### Draggable Annotations with Variable Dimensions
+
+**Challenge**: Implementing draggable highlights and underlines that can vary in size based on user interaction.
+
+**Solution**:
+
+- Used mouse events (mousedown, mousemove, mouseup) to track the start and end points of the drag
+- Calculated dimensions based on the difference between start and end points
+- Created a temporary annotation display during dragging for visual feedback
+- Implemented logic for min/max constraints on dimensions
+
+### Canvas Signature Integration
+
+**Challenge**: Integrating a canvas-based signature tool and embedding signatures in the PDF.
+
+**Solution**:
+
+- Created a custom SignatureCanvas component with drawing capabilities
+- Converted the canvas drawing to a data URL
+- Embedded the signature image in the PDF using pdf-lib's image embedding feature
+
+## Future Enhancements
+
+If given more time, the following features would enhance the application:
+
+1. **Text Selection and Annotation**: Allow users to select text in the PDF and create annotations tied to specific text selections.
+2. **Freehand Drawing Tool**: Add the ability to draw freehand on the PDF for more flexible annotations.
+3. **Annotation Search and Filtering**: Add search functionality to find annotations by text, type, or page.
+4. **Collaboration Features**: Enable multiple users to annotate the same document simultaneously with real-time updates.
+5. **Annotation Layers**: Allow toggling visibility of different annotation types or layers.
+6. **Better Mobile Support**: Optimize the interface and interaction for mobile devices.
+7. **PDF Text Extraction**: Extract text from PDFs to enable features like search within the document.
+8. **Form Filling**: Add support for filling out PDF forms.
+9. **Offline Support**: Implement service workers for offline functionality.
+10. **Annotation Templates**: Save and reuse common annotations or signature presets.
